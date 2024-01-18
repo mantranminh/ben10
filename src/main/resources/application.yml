@@ -1,0 +1,396 @@
+server:
+  port: 9001
+  error:
+    include-message: ALWAYS
+    include-binding-errors: ALWAYS
+feign:
+  client:
+    config:
+      bidvClient:
+        connectTimeout: ${BIDV_CL_CNN_TIMEOUT:5000}}
+        readTimeout: ${BIDV_CL_READ_TIMEOUT:5000}
+        loggerLevel: ${BIDV_CL_LOG_LVL:full}
+        baseURL: ${BIDV_CL_HOST}
+      ttlClient:
+        connectTimeout: ${TTL_CL_CNN_TIMEOUT:5000}}
+        readTimeout: ${TTL_CL_READ_TIMEOUT:5000}
+        loggerLevel: ${TTL_CL_LOG_LVL:full}
+        baseURL: ${TTL_CL_HOST}
+resilience4j:
+  retry:
+    instances:
+      throwingException:
+        max-attempts: 5
+        interval-function: exponential-backoff
+        wait-duration: 1000
+        multiplier: 2
+        max-wait-duration: 20000
+      throwingException1:
+        maxRetryAttempts: 10
+        waitDuration: 2s
+        retryExceptions:
+          - feign.RetryableException
+          - feign.FeignException.InternalServerError
+          - java.net.SocketTimeoutException
+spring:
+  application:
+    name: ${APP_NAME:ben10}
+    ttlOperatorUsername: ${TTL_OP_USER}
+    ttlOperatorPassword: ${TTL_OP_PASSWORD}
+    bidvServiceId: ${BIDV_SERVICE_ID}
+    bidvMerchantId: ${BIDV_MERCHANT_ID}
+    bidvMerchantName: ${BIDV_MERCHANT_NAME}
+    bidvChannelId: ${BIDV_CHANNEL_ID}
+    bidvAppCode: ${BIDV_APP_CODE}
+    bidvUsername: ${BIDV_APP_USERNAME}
+    bidvPassword: ${BIDV_APP_PASSWORD}
+    bidvSecret: ${BIDV_APP_SECRET}  # aka. BIDV private key
+    skipCheckNameEnabled: ${SKIP_CHECK:false}
+    kisDepositBanks:
+      - shortName: Ngân hàng BIDV
+        name: Ngân hàng TMCP Đầu tư và Phát triển Việt Nam
+        code: BIDV
+        bin: 970418
+        logoUrl: deposit/qr/bankIcon/BIDV.png
+        accNumber: 11910000102557
+        accHolder: CTCP Chứng khoán KIS Việt Nam
+      - shortName: Ngân hàng VietcomBank
+        name: Ngân hàng TMCP Ngoại Thương Việt Nam
+        code: VCB
+        bin: 970436
+        logoUrl: deposit/qr/bankIcon/VCB.png
+        accNumber: 0071004630690
+        accHolder: CTY CP CHUNG KHOAN KIS VIETNAM
+      - shortName: Ngân hàng ACB
+        name: Ngân hàng TMCP Á Châu
+        code: ACB
+        bin: 970416
+        logoUrl: deposit/qr/bankIcon/ACB.png
+        accNumber: 77435699
+        accHolder: CTY CP CHUNG KHOAN KIS VIETNAM
+      - shortName: Ngân hàng VIB
+        name: Ngân hàng TMCP Quốc tế Việt Nam
+        code: VIB
+        bin: 970441
+        logoUrl: deposit/qr/bankIcon/VIB.png
+        accNumber: 003704064448888
+        accHolder: CTCP CK KIS VN-CN HN
+      - shortName: Ngân hàng MSB
+        name: Ngân hàng TMCP Hàng Hải
+        code: MSB
+        bin: 970426
+        logoUrl: deposit/qr/bankIcon/MSB.png
+        accNumber: 04001010064837
+        accHolder: CTY CP CHUNG KHOAN KIS VIETNAM
+      - shortName: Ngân hàng Shinhan
+        name: Ngân hàng TNHH MTV Shinhan Việt Nam
+        code: SHBVN
+        bin: 970424
+        logoUrl: deposit/qr/bankIcon/SHBVN.png
+        accNumber: 700003560857
+        accHolder: CONG TY CO PHAN CHUNG KHOAN KIS
+      - shortName: Ngân hàng MB
+        name: Ngân hàng TMCP Quân đội
+        code: MBB
+        bin: 970422
+        logoUrl: deposit/qr/bankIcon/MBB.png
+        accNumber: 0571103477007
+        accHolder: CTYCP CHUNG KHOAN KIS VIET NAM
+      - shortName: Ngân hàng Techcombank
+        name: Ngân hàng TMCP Kỹ thương Việt Nam
+        code: TCB
+        bin: 970407
+        logoUrl: deposit/qr/bankIcon/TCB.png
+        accNumber: 19021359720201
+        accHolder: KIS
+      - shortName: Ngân hàng Woori
+        name: Ngân hàng TNHH MTV Woori Việt Nam
+        code: WVN
+        bin: 970457
+        logoUrl: deposit/qr/bankIcon/WVN.png
+        accNumber: 100200040725
+        accHolder: KIS VIET NAM SECURITIES CORPORATION
+      - shortName: Ngân hàng VietinBank
+        name: Ngân hàng TMCP Công thương Việt Nam (VietinBank)
+        code: ICB
+        bin: 970415
+        logoUrl: deposit/qr/bankIcon/ICB.png
+        accNumber: 121000047944
+        accHolder: CTYCP CHUNG KHOAN KIS VIET NAM
+      - shortName: Ngân hàng VPBbank
+        name: Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBbank)
+        code: VPB
+        bin: 970432
+        logoUrl: deposit/qr/bankIcon/VPB.png
+        accNumber: 224317368
+        accHolder: KIS
+      - shortName: Ngân hàng Bangkok
+        name: Ngân hàng Bangkok
+        code: BANGKOK
+        bin:
+        logoUrl: deposit/qr/bankIcon/BANGKOK.png
+        accNumber: 0818102919401
+        accHolder: CTCP Chứng khoán KIS Việt Nam
+      - shortName: Ngân Hàng Busan
+        name: Ngân Hàng BNK Busan Việt Nam
+        code: BUSAN
+        bin:
+        logoUrl: deposit/qr/bankIcon/BUSAN.png
+        accNumber: 132201100000239
+        accHolder: CTCP Chứng khoán KIS Việt Nam
+      - shortName: Ngân Hàng KEB Hana
+        name: Ngân hàng KEB Hana – Chi nhánh TpHCM
+        code: KEBHANA
+        bin: 970466
+        logoUrl: deposit/qr/bankIcon/KEBHANAHCM.png
+        accNumber: 00870002560
+        accHolder: CONG TY CO PHAN CHUNG KHOAN KIS VIET NAM
+      - shortName: Ngân hàng Kookmin
+        name: Ngân hàng Kookmin - Chi nhánh TpHCM
+        code: KBHCM
+        bin: 970463
+        logoUrl: deposit/qr/bankIcon/KBHCM.png
+        accNumber: 810001220002060
+        accHolder: CONG TY CO PHAN CHUNG KHOAN KIS VIET NAM
+    initNapasMode: ${INIT_NAPAS_MODE:DEFINED}  # DEFINED|COMBINED
+    definedNapasList:
+      - bin: '970444'
+        shortName: NH CB Bank
+        name: NH Xây dựng Việt Nam CB Bank
+        code: CB
+        citadCode: '339'
+      - bin: '970415'
+        shortName: NH VietinBank
+        name: 'NH TMCP  Công Thương Việt Nam '
+        code: VIETINBANK
+        citadCode: '201'
+      - bin: '970405'
+        shortName: NH Agribank
+        name: NH Nông nghiệp và Phát triển Nông thôn Việt Nam
+        code: AGR
+        citadCode: '204'
+      - bin: '970436'
+        shortName: NH Vietcombank
+        name: NH TMCP Ngoại thương Việt Nam
+        code: VCB
+        citadCode: '203'
+      - bin: '970426'
+        shortName: NH MSB
+        name: NH TMCP Hàng hải Việt Nam
+        code: MSB
+        citadCode: '302'
+      - bin: '970407'
+        shortName: NH Techcombank
+        name: NH TMCP Kỹ Thương Việt Nam
+        code: TCB
+        citadCode: '310'
+      - bin: '970409'
+        shortName: NH Bắc Á
+        name: NH TMCP Bắc Á
+        code: BAB
+        citadCode: '313'
+      - bin: '970440'
+        shortName: NH SeABank
+        name: NH TMCP Đông Nam Á
+        code: SEA
+        citadCode: '317'
+      - bin: '970408'
+        shortName: NH GPBank
+        name: NH Dầu Khí Toàn Cầu
+        code: GPBANK
+        citadCode: '320'
+      - bin: '970425'
+        shortName: NH An Bình
+        name: NH TMCP An Bình
+        code: ABB
+        citadCode: '323'
+      - bin: '970430'
+        shortName: NH Petrolimex
+        name: NH TMCP Thịnh vượng và Phát triển
+        code: PGB
+        citadCode: '341'
+      - bin: '970443'
+        shortName: NH SHB
+        name: NH TMCP Sài Gòn Hà Nội
+        code: SHB
+        citadCode: '348'
+      - bin: '970449'
+        shortName: NH LPBank
+        name: NH TMCP Bưu điện Liên Việt
+        code: LPB
+        citadCode: '357'
+      - bin: '970423'
+        shortName: 'NH TPBank '
+        name: NH TMCP Tiên Phong
+        code: TPB
+        citadCode: '358'
+      - bin: '970438'
+        shortName: NH Bảo Việt
+        name: NH TMCP Bảo Việt
+        code: BVH
+        citadCode: '359'
+      - bin: '970412'
+        shortName: NH PVcomBank
+        name: NH PVcomBank
+        code: PVCOMBANK
+        citadCode: '360'
+      - bin: '970439'
+        shortName: NH PublicBank Viet Nam
+        name: NH PublicBank Viet Nam
+        code: PBBVN
+        citadCode: '501'
+      - bin: '458761'
+        shortName: NH HSBC
+        name: NH TNHH MTV HSBC
+        code: HSBC
+        citadCode: '617'
+      - bin: '970455'
+        shortName: NH IBK
+        name: NH Công Nghiệp Hàn Quốc IBK Bank
+        code: IBK
+        citadCode: '652'
+      - bin: '422589'
+        shortName: NH CIMB
+        name: NH TNHH MTV CIMB Việt Nam
+        code: CIMB
+        citadCode: '661'
+      - bin: '970457'
+        shortName: NH Woori
+        name: NH Woori
+        code: WOORI
+        citadCode: '663'
+      - bin: '970462'
+        shortName: NH KB Kookmin
+        name: 'NH KB Kookmin Bank '
+        code: KOOKMIN
+        citadCode: '631'
+      - bin: '970418'
+        shortName: NH BIDV
+        name: NH NH TMCP Đầu tư và Phát triển Việt Nam BIDV
+        code: BIDV
+        citadCode: '202'
+      - bin: '970432'
+        shortName: NH VPBAnk
+        name: NH TMCP Việt Nam Thịnh Vượng
+        code: VPB
+        citadCode: '309'
+      - bin: '970406'
+        shortName: NH Đông Á
+        name: NH TMCP Đông Á
+        code: DAB
+        citadCode: '304'
+      - bin: '970428'
+        shortName: NH Nam Á Bank
+        name: NH TMCP Nam Á
+        code: NAB
+        citadCode: '306'
+      - bin: '970427'
+        shortName: NH Việt Á VietABank
+        name: NH TMCP Việt Á VietABank
+        code: VAB
+        citadCode: '355'
+      - bin: '970441'
+        shortName: NH Quốc Tế VIB
+        name: NH TMCP Quốc tế Việt Nam VIB
+        code: VIB
+        citadCode: '314'
+      - bin: '970421'
+        shortName: NH Việt - Nga VRB
+        name: NH Liên doanh Việt - Nga
+        code: VRB
+        citadCode: '505'
+      - bin: '970403'
+        shortName: NH Sacombank
+        name: NH TMCP Sài Gòn Thương Tín Sacombank
+        code: STB
+        citadCode: '303'
+      - bin: '970431'
+        shortName: NH Eximbank
+        name: NH Xuất Nhập Khẩu Việt Nam Eximbank
+        code: EIB
+        citadCode: '305'
+      - bin: '970416'
+        shortName: NH ACB
+        name: NH TMCP Á Châu ACB
+        code: ACB
+        citadCode: '307'
+      - bin: '970400'
+        shortName: NH Saigon Bank
+        name: NH TMCP Sài Gòn Công Thương Saigon Bank
+        code: SAIGONBANK
+        citadCode: '308'
+      - bin: '970422'
+        shortName: NH Quân Đội MB-BANK
+        name: NH Quân Đội MB-BANK
+        code: MBB
+        citadCode: '311'
+      - bin: '970414'
+        shortName: NH Đại Dương OceanBank
+        name: NH Đại Dương OceanBank
+        code: OCEAN
+        citadCode: '319'
+      - bin: '970437'
+        shortName: NH Phát triển TP.HCM HDBank
+        name: NH TMCP Phát triển Thành phố Hồ Chí Minh HDBank
+        code: HDB
+        citadCode: '321'
+      - bin: '970454'
+        shortName: NH Bản Việt
+        name: NH TMCP Phát triển Bản Việt
+        code: BVB
+        citadCode: '327'
+      - bin: '970448'
+        shortName: NH Phương Đông OCB
+        name: NH TMCP Phương Đông
+        code: OCB
+        citadCode: '333'
+      - bin: '970419'
+        shortName: 'NH Quốc Dân NCB'
+        name: 'NH Quốc Dân NCB'
+        code: NCB
+        citadCode: '352'
+      - bin: '970452'
+        shortName: NH Kiên Long
+        name: NH TMCP  Kiên Long
+        code: KLB
+        citadCode: '353'
+      - bin: '970433'
+        shortName: NH VietBank
+        name: NH TMCP Việt Nam Thương Tín VietBank
+        code: VIETBANK
+        citadCode: '356'
+      - bin: '970434'
+        shortName: NH Indovinabank
+        name: NH Trách nhiệm hữu hạn Indovina
+        code: INDOVINA
+        citadCode: '502'
+      - bin: '970442'
+        shortName: NH Hong Leong
+        name: NH Hong Leong
+        code: HLBVN
+        citadCode: '603'
+      - bin: '970410'
+        shortName: NH Standard Chartered Việt Nam
+        name: NH Standard Chartered Việt Nam
+        code: STAN
+        citadCode: '604'
+      - bin: '970424'
+        shortName: NH Shinhan
+        name: NH Shinhan
+        code: SHINHAN
+        citadCode: '616'
+      - bin: '970456'
+        shortName: NH Công nghiệp Hàn Quốc IBK
+        name: NH Công nghiệp Hàn Quốc IBK
+        code: IBK
+        citadCode: '641'
+      - bin: '970429'
+        shortName: NH TMCP Sài Gòn
+        name: NH TMCP Sài Gòn
+        code: SCB
+        citadCode: '334'
+      - bin: '970458'
+        shortName: NH United Oversea Bank
+        name: NH Công nghiệp Hàn Quốc IBK
+        code: UOB
+        citadCode: '618'
